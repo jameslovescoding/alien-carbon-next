@@ -13,12 +13,11 @@ const ActionPage: React.FC = () => {
   const searchParams = useSearchParams();
   const mode = searchParams.get('mode');
   const oobCode = searchParams.get('oobCode');
-  const apiKey = searchParams.get('apiKey');
-  const lang = searchParams.get('lang');
+  // const apiKey = searchParams.get('apiKey');
+  // const lang = searchParams.get('lang');
 
   const [message, setMessage] = useState<string>('Processing...');
   const [newPassword, setNewPassword] = useState<string>('');
-  const [actionCompleted, setActionCompleted] = useState<boolean>(false);
   const [showPasswordInput, setShowPasswordInput] = useState<boolean>(false);
 
   useEffect(() => {
@@ -42,14 +41,14 @@ const ActionPage: React.FC = () => {
   const handleResetPassword = async (oobCode: string) => {
     try {
       // Verify the password reset code
-      let userEmail = await verifyPasswordResetCode(auth, oobCode);
+      const userEmail = await verifyPasswordResetCode(auth, oobCode);
       if (userEmail) {
         setShowPasswordInput(true);
         setMessage(`Please enter a new password for ${userEmail}.`);
       } else {
         setMessage('Invalid or expired password reset code.');
       }
-    } catch (error) {
+    } catch (_error) {
       setMessage('Invalid or expired password reset code.');
     }
   };
@@ -64,7 +63,7 @@ const ActionPage: React.FC = () => {
       await confirmPasswordReset(auth, oobCode!, newPassword);
       setMessage('Your password has been reset successfully!');
       setShowPasswordInput(false);
-    } catch (error) {
+    } catch (_error) {
       setMessage('Error resetting password. Please try again.');
     }
   };
@@ -74,7 +73,7 @@ const ActionPage: React.FC = () => {
       // Apply the email verification code
       await applyActionCode(auth, oobCode);
       setMessage('Your email has been verified successfully!');
-    } catch (error) {
+    } catch (_error) {
       setMessage('Invalid or expired email verification code.');
     }
   };
