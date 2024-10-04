@@ -53,10 +53,24 @@ const ActionPage: React.FC = () => {
     }
   };
 
-  const handleConfirmResetPassword = async () => {
+  const handleVerifyEmail = async (oobCode: string) => {
+    try {
+      // Apply the email verification code
+      await applyActionCode(auth, oobCode);
+      setMessage('Your email has been verified successfully!');
+    } catch (_error) {
+      setMessage('Invalid or expired email verification code.');
+    }
+  };
+
+  const handleSubmitNewPassword = async () => {
     try {
       if (!newPassword) {
         setMessage('Please enter a new password.');
+        return;
+      }
+      if (!validatePassword(newPassword)) {
+        setMessage('Password does not meet the required criteria.');
         return;
       }
       // Confirm the password reset with the new password
@@ -68,14 +82,9 @@ const ActionPage: React.FC = () => {
     }
   };
 
-  const handleVerifyEmail = async (oobCode: string) => {
-    try {
-      // Apply the email verification code
-      await applyActionCode(auth, oobCode);
-      setMessage('Your email has been verified successfully!');
-    } catch (_error) {
-      setMessage('Invalid or expired email verification code.');
-    }
+  const validatePassword = (password: string) => {
+    const regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%])[A-Za-z\d!@#$%]{8,16}$/;
+    return regex.test(password);
   };
 
   return (
@@ -91,7 +100,7 @@ const ActionPage: React.FC = () => {
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
           />
-          <button onClick={handleConfirmResetPassword}>Reset Password</button>
+          <button onClick={handleSubmitNewPassword}>Reset Password</button>
         </div>
       )}
     </div>

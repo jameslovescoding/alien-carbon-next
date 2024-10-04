@@ -1,10 +1,10 @@
 import { Suspense } from 'react';
-import AuthAction from '../action/content'
+import ActionContent from '../action/content'
 
 function AuthActionPage() {
   return (
     <Suspense fallback="Loading...">
-      <AuthAction />
+      <ActionContent />
     </Suspense>
   );
 }
